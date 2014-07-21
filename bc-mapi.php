@@ -517,7 +517,7 @@ class BCMAPI
 
 		if(isset($file))
 		{
-			$request['file'] = '@' . $file;
+			$request['file'] = new CurlFile($file);
 		}
 
 		return (string)$this->putData($request)->result;
@@ -624,7 +624,7 @@ class BCMAPI
 
 		if(isset($file))
 		{
-			$request['file'] = '@' . $file;
+			$request['file'] = new CurlFile($file);
 		}
 
 		return $this->putData($request)->result;
@@ -679,7 +679,7 @@ class BCMAPI
 
 		if(isset($file))
 		{
-			$request['file'] = '@' . $file;
+			$request['file'] = new CurlFile($file);
 		}
 
 		return $this->putData($request)->result;
@@ -727,7 +727,7 @@ class BCMAPI
 
 		if(isset($file))
 		{
-			$request['file'] = '@' . $file;
+			$request['file'] = new CurlFile($file);
 		}
 
 		return $this->putData($request)->result;
