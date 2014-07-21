@@ -631,6 +631,61 @@ class BCMAPI
 	}
 
 	/**
+	 * Uploads a caption file to Brightcove.
+	 * @access Public
+	 * @since 0.3.4
+	 * @param string [$type] The type of object to upload caption for
+	 * @param string [$file] The location of the temporary file
+	 * @param array [$meta] The caption information
+	 * @param int [$id] The ID of the media asset to assign the caption to
+	 * @param string [$ref_id] The reference ID of the media asset to assign the caption to
+	 * @param bool [$resize] Whether or not to resize the caption on upload
+	 * @return mixed The caption asset
+	 */
+	public function createCaptions($type = 'video', $file = NULL, $meta, $id = NULL, $ref_id = NULL)
+	{
+		$request = array();
+		$post = array();
+		$params = array();
+		$media = array();
+
+		if(strtolower($type) == 'video')
+		{
+			$post['method'] = 'add_captioning';
+		} else {
+			throw new BCMAPIInvalidType($this, self::ERROR_INVALID_TYPE);
+		}
+
+		foreach($meta as $key => $value)
+		{
+			$media[$key] = $value;
+		}
+
+		if(isset($id))
+		{
+			$params[strtolower($type) . '_id'] = $id;
+		} elseif(isset($ref_id)) {
+			$params[strtolower($type) . '_reference_id'] = $ref_id;
+		} else {
+			throw new BCMAPIIdNotProvided($this, self::ERROR_ID_NOT_PROVIDED);
+		}
+
+		$params['token'] = $this->token_write;
+		$params['caption_source'] = $media;
+
+		$post['params'] = $params;
+
+		$request['json'] = json_encode($post) . "\n";
+
+		if(isset($file))
+		{
+			$request['file'] = '@' . $file;
+		}
+
+		return $this->putData($request)->result;
+	}
+
+	/**
 	 * Uploads a logo overlay file to Brightcove.
 	 * @access Public
 	 * @since 1.1.0
